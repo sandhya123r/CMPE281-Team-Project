@@ -1,0 +1,15 @@
+Design notes for Amazon prototype shopping cart user sessions 
+
+Reference : http://www.gridshore.nl/2011/07/28/combining-java-and-node-js-through-redis-pubsub-and-a-json-remote-interface/
+
+
+Spring server takes the HTTP requests - GET , POST, PUT for now and writes the record to a query db and reflects the change in redis
+
+Implementation Notes :- 
+
+1)JSON response,Take a key value object from the http 
+2)Current cart,payment design classes
+3)DB calls - store,fetch , delete , update
+4)Listener configuration - for the db and redis.
+
+
