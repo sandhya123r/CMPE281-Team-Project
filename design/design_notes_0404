@@ -12,4 +12,8 @@ Implementation Notes :-
 3)DB calls - store,fetch , delete , update
 4)Listener configuration - for the db and redis.
 
+Notes 04/06
+Authentication for sessions - https://stormpath.com/blog/build-spring-boot-spring-security-app/
+
+
 
