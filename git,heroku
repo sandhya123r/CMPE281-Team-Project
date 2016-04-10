@@ -1,0 +1,58 @@
+-Install git on ur local machine.
+
+Which basically a tool which takes care of every thing that goes on ur local machine. Like creating repo on local machine, handling all ur commands, blah blah.
+
+-Create a folder on ur local machine.
+
+- cd in folder
+
+- git init (It creates .git folder in this folder which basically tells git that this is kind of like local repo)
+
+this is git folder now(we can say it is a local repo on ur machine)
+
+-every time u create new file in this file u need to first add this file 
+
+e.g. git add <file_name>
+
+-then you need to commit this file to ur local repo
+
+git commit <file_name>
+
+this is like commit which we used to do in siemens. Here the repo is on ur local machine to which ur committing  new file.
+
+- At any given point of time u can hit 
+
+git status commands
+
+this will tell u which all files are just 'added' and not committed.
+
+- After this we need to tell git that there is a remote repo “GitHub” where we want to push out code.
+
+-for this 
+
+git remote add origin https://github.com/mayurisapre/myproject.git
+
+git remote -v
+
+-now u can push/pull code from ur local repo(ur machine to this remote repo)
+
+
+
+TO DEPLOY APP FROM UR LOCAL GIT TO HEROKU--
+
+- go to folder which is there in ur local git repo
+
+- do “heroku login”
+		
+		give username and password
+- heroku create
+ 		this will just create platform for ur app and url for ur app
+
+- git push heroku master
+
+
+U can directly connect to GitHub from ur heroku dashboard and deploy the app from code available on ur github account
+
+
+
+
