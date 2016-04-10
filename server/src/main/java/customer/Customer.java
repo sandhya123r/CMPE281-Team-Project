@@ -20,6 +20,11 @@ public class Customer {
         this.address = address;
         this.phone = phone;
         this.creditCard = creditCard;
+        this.setCartId();
+    }
+
+    public Customer() {
+        this.setCartId();
     }
 
     public String getEmail() {
@@ -57,7 +62,7 @@ public class Customer {
         this.creditCard = creditCard;	
     }
 
-    public void setCardId() {
+    public void setCartId() {
         // generate and set cart id
         this.cartId = String.valueOf(UUID.randomUUID());
     }
