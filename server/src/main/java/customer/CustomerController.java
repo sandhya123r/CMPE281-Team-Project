@@ -36,9 +36,10 @@ public class CustomerController {
 
     @RequestMapping("/{email}")
     public String GetDetails(@PathVariable String email) {
+        Gson gson = new Gson();
         System.out.println("Got email: " +  email);
         if(this.allCustomers.containsKey(email)){
-            return this.allCustomers.get(email).getName();
+            return gson.toJson(this.allCustomers.get(email)).toString();
      	} 
         throw new ResourceNotFoundException(email); 	
      }
