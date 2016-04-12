@@ -10,7 +10,7 @@ public class Customer {
     private String phone;
     private String creditCard;
     // later, link this to a cart object
-    private String cartId;
+    private Cart cart;
 	
 
     public Customer(String email, String name, String address,
@@ -20,13 +20,14 @@ public class Customer {
         this.address = address;
         this.phone = phone;
         this.creditCard = creditCard;
-        this.setCartId();
+        this.setCart();
     }
-
+/*
     public Customer() {
-        this.setCartId();
+        Cart cart = new Cart();
+        this.setCartId(cart.getCartId());
     }
-
+*/
     public String getEmail() {
         return email;
     } 
@@ -42,8 +43,8 @@ public class Customer {
     public String getCreditCard() {
     	return creditCard; 
     }
-    public String getCartId() {
-        return cartId;
+    public Cart getCart() {
+        return cart;
     }
     
     public void setEmail(String email){
@@ -62,8 +63,7 @@ public class Customer {
         this.creditCard = creditCard;	
     }
 
-    public void setCartId() {
-        // generate and set cart id
-        this.cartId = String.valueOf(UUID.randomUUID());
+    public void setCart() {
+        this.cart = new Cart();
     }
 }
