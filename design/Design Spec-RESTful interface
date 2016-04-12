@@ -1,0 +1,79 @@
+possible curl requests:
+
+0. Login
+https://stormpath.com/blog/spring-security-plugin-stormpath-end-end-application-security-spring-developers/
+
+1. /customer
+    o  /customer/GET/<email>
+    o  /customer/POST -d {
+        email: "",
+        name: "",
+        address: "",
+        phone number: "",
+        credit card: ""
+       }
+
+// Do this if you get time.
+    o /customer/PUT/<email> -d {}
+    o /customer/DELETE/<email>
+
+
+2. /cart
+Note: No POST or DELETE, you can't create/delete a cart
+
+    o /cart/GET/<cart id>
+    o /cart/PUT/<cart id> -d 'dict of items and counts'
+        Note: this is an *updated* count, not increment or decrement.
+        Note: add/remove item from a cart is just a PUT on the cart
+
+
+
+3. /product
+
+    o No POST, can only be created at backend
+    o GET/<name>
+        Note: Will let you show a product
+        Note: add/remove item from a cart is just a PUT on the cart
+
+
+
+Customer Data type
+-----------------------
+email
+name
+address
+phone
+credit_card
+cart id:
+
+
+
+Cart type
+---------------------
+id:
+items: {product_name: count}
+
+
+Product type
+-----------------
+id:
+name:
+price:
+desc:
+
+
+Db schema
+----------------
+Note: We will start with mysql, but make the tables simple.
+
+Customer
+------------
+id INT autoincrement,
+email varchar(36) primary key,
+data varchar(65535),
+
+Cart
+----------
+id INT autoincrement,
+name varchar(36) primary key,
+data varchar(65525)
