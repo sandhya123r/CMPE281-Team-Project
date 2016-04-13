@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.stereotype.Controller;
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -47,10 +47,11 @@ public class CustomerController {
      }
 
     public Customer readFromDb(String email) {
-        if(this.allCustomers.containsKey(email)){
-            return this.allCustomers.get(email);
-     	} 
-        throw new ResourceNotFoundException(email); 	
+        if(this.allCustomers.containsKey(email)) { 
+            return this.allCustomers.get(email); 
+        }
+        throw new ResourceNotFoundException(email);
+
     }
 
     //Get customer cart details
@@ -126,3 +127,4 @@ public class CustomerController {
         this.allCustomers.put(customer.getEmail(), customer);
     }
 }
+

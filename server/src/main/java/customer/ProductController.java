@@ -1,4 +1,4 @@
-package product;
+package customer;
 
 import java.util.*;
 import com.google.gson.Gson;
@@ -8,14 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason="non-existent record")
-class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String key) {
-        System.out.println("Resource not found" + key);
-    }
-}
 
-@Controller
+@RestController
 @RequestMapping("/products")
 public class ProductController {
 
@@ -33,10 +27,18 @@ public class ProductController {
     @RequestMapping("/{name}")
     public String GetDetails(@PathVariable String name) {
         System.out.println("calling for "+name);
-        if(this.allProducts.containsKey(name)){
-            return new Gson().toJson(this.allProducts.get(name));
-     	} 
-        throw new ResourceNotFoundException(name); 	
+        Product product = readFromProductDb(name);
+        Gson gson = new Gson();
+        return gson.toJson(product); 
      }
+
+    public Product readFromProductDb(String name) {
+        if(this.allProducts.containsKey(name)) {
+               return this.allProducts.get(name);
+        }    
+        throw new ResourceNotFoundException(name);
+    }
+
+    
 	
 }
