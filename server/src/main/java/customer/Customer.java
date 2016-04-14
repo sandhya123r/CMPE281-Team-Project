@@ -1,6 +1,7 @@
 package customer;
 
 import java.util.UUID;
+import com.google.gson.Gson;
 
 public class Customer {
 
@@ -46,7 +47,11 @@ public class Customer {
     public Cart getCart() {
         return cart;
     }
-    
+
+    public String getDetails() {
+        Gson gson = new Gson();
+        return  gson.toJson(this);
+    }
     public void setEmail(String email){
         this.email = email;	
     }  

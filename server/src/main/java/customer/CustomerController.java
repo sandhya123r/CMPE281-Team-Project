@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason="non-existent record")
 class ResourceNotFoundException extends RuntimeException {
@@ -23,6 +24,7 @@ public class CustomerController {
 
 	
     private  Map <String,Customer> allCustomers; 
+    private JdbcCustomerDAO jdbcCustomerDAO;
      
     public CustomerController(){
         this.allCustomers = new HashMap <String,Customer>();
@@ -35,6 +37,11 @@ public class CustomerController {
         this.allCustomers.put(u1.getEmail(), u1);
         this.allCustomers.put(u2.getEmail(), u2);
         System.out.println(this.allCustomers);
+
+        ApplicationContext context = 
+        new ClassPathXmlApplicationContext("Spring-Module.xml");
+         
+        this.jdbcCustomerDAO = (JdbcCustomerDAO) context.getBean("customerDAO");
     } 
 
     //Get customer details using the email address 
@@ -125,6 +132,7 @@ public class CustomerController {
 
     public void writeToDb(Customer customer) {
         this.allCustomers.put(customer.getEmail(), customer);
+        this.jdbcCustomerDAO.insert(customer);
     }
 }
 
