@@ -1,5 +1,9 @@
 package customer;
 
+
+import customer.model.Customer;
+import customer.dao.CustomerDAO;
+
 import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -8,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason="non-existent record")
@@ -23,7 +30,10 @@ public class CustomerController {
 
 	
     private  Map <String,Customer> allCustomers; 
-     
+
+    private ApplicationContext context;
+    private CustomerDAO customerDAO;
+
     public CustomerController(){
         this.allCustomers = new HashMap <String,Customer>();
         Customer u1 = new Customer(
@@ -35,6 +45,11 @@ public class CustomerController {
         this.allCustomers.put(u1.getEmail(), u1);
         this.allCustomers.put(u2.getEmail(), u2);
         System.out.println(this.allCustomers);
+
+        context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+        customerDAO = (CustomerDAO) context.getBean("customerDAO");
+        customerDAO.insert(u1);
+        customerDAO.insert(u2);
     } 
 
     //Get customer details using the email address 
@@ -124,6 +139,7 @@ public class CustomerController {
     }
 
     public void writeToDb(Customer customer) {
+        this.customerDAO.insert(customer);
         this.allCustomers.put(customer.getEmail(), customer);
     }
 }

@@ -28,6 +28,17 @@
             <artifactId>spring-security-web</artifactId>
             <version>4.0.4.RELEASE</version>
         </dependency>
+    <!-- MySQL database driver -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.9</version>
+    </dependency>
+    <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>4.0.6.RELEASE</version>
+        </dependency>
     </dependencies> 
 
     <properties>
