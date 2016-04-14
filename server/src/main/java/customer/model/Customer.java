@@ -1,6 +1,8 @@
-package customer;
+package customer.model;
 
+import customer.Cart;
 import java.util.UUID;
+import com.google.gson.Gson;
 
 public class Customer {
 
@@ -28,6 +30,11 @@ public class Customer {
         this.setCartId(cart.getCartId());
     }
 */
+
+    public String getDetails() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
     public String getEmail() {
         return email;
     } 
