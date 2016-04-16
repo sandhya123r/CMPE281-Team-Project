@@ -85,7 +85,7 @@ module.exports = function(passport) {
         passwordField : 'password',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
-    
+
     function(req, email, password, done) { // callback with email and password from our form
 
         // find a user whose email is the same as the forms email
@@ -103,10 +103,43 @@ module.exports = function(passport) {
             if (!user.validPassword(password))
                 return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 
+            //TODO:: This is where we send the user information to the backend database
+            var request = require('request');
+
+            //test data
+            var USER_DATA = {
+                "user":  email,
+                "password": password
+            }
+
+            var options = {
+                method: 'POST',
+                url: 'http://localhost:8080/postCheck',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                json: USER_DATA
+
+            };
+
+            request(options,callback);
+
+
             // all is well, return successful user
             return done(null, user);
         });
 
     }));
+
+    function callback(error, response, body) {
+    if (!error) {
+        var info = JSON.parse(JSON.stringify(body));
+        console.log(info);
+    }
+    else {
+        console.log('Error happened: '+ error);
+    }
+}
+
 
 };

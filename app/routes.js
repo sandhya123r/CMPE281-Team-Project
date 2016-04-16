@@ -65,6 +65,15 @@ module.exports = function(app, passport) {
         req.logout();
         res.redirect('/');
     });
+
+    // =====================================
+    // PostCheck PAGE (For Debug)   ========
+    // =====================================
+    app.post('/postCheck', function(req, res) {
+        console.log(req.body);
+        res.json(req.body);
+        //res.render('postCheck.ejs'); // load the index.ejs file
+    });
 };
 
 // route middleware to make sure a user is logged in
