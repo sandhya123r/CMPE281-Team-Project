@@ -122,11 +122,14 @@ public class CustomerController {
             Integer value = entry.getValue();
             System.out.println("Key: " + key + " Value: "  + String.valueOf(value));
             if(cart.getItems().containsKey(key)) {
+		System.out.println("Incrementing value ");
                 cart.getItems().put(key, cart.getItems().get(key) + value);
             } else {
-                cart.getItems().put(key, value);
+                System.out.println("Inserting for the first time ");
+		cart.getItems().put(key, value);
             }
         }
+ 	
         List <String> keysToRemove = new ArrayList<String>();
         for (Map.Entry <String, Integer> entry: cart.getItems().entrySet()) {
             String key = entry.getKey();
@@ -139,9 +142,17 @@ public class CustomerController {
         for (String key: keysToRemove) {
             cart.getItems().remove(key);
         }
-        return gson.toJson(cart);
+	
+	cart.setItems(cart.getItems());
+	customer.setCart(cart);
+	System.out.println("new cart is : " + cart.getItems() );
+        updateDb(customer);
+	return gson.toJson(cart);
     }
 
+    public void updateDb(Customer customer) {
+    	this.customerDAO.update(customer);	
+    }
     public void writeToDb(Customer customer) {
         this.customerDAO.insert(customer);
         // this.allCustomers.put(customer.getEmail(), customer);

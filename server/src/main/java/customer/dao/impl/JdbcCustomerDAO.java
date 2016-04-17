@@ -46,6 +46,31 @@ public class JdbcCustomerDAO implements CustomerDAO
 			}
 		}
 	}
+	
+	
+	public void update(Customer customer) {
+		
+		String updateSql = "UPDATE customer SET details = ? WHERE email = ?";
+		Connection conn = null ; 
+		try {
+			conn = dataSource.getConnection();
+                	PreparedStatement ps = conn.prepareStatement(updateSql);
+               		ps.setString(1, customer.getDetails());
+                	ps.setString(2, customer.getEmail());
+			ps.executeUpdate();
+			ps.close();	
+	        } catch (SQLException e) {
+                        throw new RuntimeException(e);
+
+                } finally {
+                        if (conn != null) {
+                                try {
+                                        conn.close();
+                                } catch (SQLException e) {}
+                        }
+                }
+
+	}
 
 	public Customer findByCustomerEmail(String email){
 		

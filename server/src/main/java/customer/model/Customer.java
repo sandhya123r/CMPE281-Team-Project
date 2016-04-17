@@ -71,6 +71,9 @@ public class Customer {
         this.creditCard = creditCard;	
     }
 
+    public void setCart(Cart cart) {
+    	this.cart = cart ; 
+    }
     public void setCart() {
         this.cart = new Cart();
     }
