@@ -31,21 +31,19 @@ module.exports = function(app, passport) {
         res.render('signup.ejs', { message: req.flash('signupMessage') });
     });
 
-    // =====================================
-    // SUCCESS ==============================
-    // =====================================
-    // show the signup form
-    app.get('/success', function(req, res) {
-
-        // render the page and pass in any flash data if it exists
-        res.render('success.ejs');
-    });
-
     // process the signup form
-    
+    // app.post('/signup', do all our passport stuff here);
+    // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/success', // redirect to the secure profile section
-        failureRedirect : '/success', // redirect back to the signup page if there is an error
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/signup', // redirect back to the signup page if there is an error
+        failureFlash : true // allow flash messages
+    }));
+
+    // process the login form
+    app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/profile', // redirect to the secure profile section
+        failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
 
@@ -66,6 +64,15 @@ module.exports = function(app, passport) {
     app.get('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
+    });
+
+    // =====================================
+    // PostCheck PAGE (For Debug)   ========
+    // =====================================
+    app.post('/postCheck', function(req, res) {
+        console.log(req.body);
+        res.json(req.body);
+        //res.render('postCheck.ejs'); // load the index.ejs file
     });
 };
 
