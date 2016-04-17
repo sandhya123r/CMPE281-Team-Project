@@ -24,6 +24,7 @@ public class Customer {
         this.creditCard = creditCard;
         this.setCart();
     }
+
 /*
     public Customer() {
         Cart cart = new Cart();

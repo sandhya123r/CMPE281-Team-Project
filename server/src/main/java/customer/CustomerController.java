@@ -62,11 +62,15 @@ public class CustomerController {
      }
 
     public Customer readFromDb(String email) {
-        if(this.allCustomers.containsKey(email)) { 
-            return this.allCustomers.get(email); 
+        // if(this.allCustomers.containsKey(email)) { 
+        //    return this.allCustomers.get(email); 
+        // }
+        try {
+            Customer customer = this.customerDAO.findByCustomerEmail(email);
+            return customer;
+        } catch(RuntimeException r) {
+            throw new ResourceNotFoundException(email);
         }
-        throw new ResourceNotFoundException(email);
-
     }
 
     //Get customer cart details
@@ -140,7 +144,7 @@ public class CustomerController {
 
     public void writeToDb(Customer customer) {
         this.customerDAO.insert(customer);
-        this.allCustomers.put(customer.getEmail(), customer);
+        // this.allCustomers.put(customer.getEmail(), customer);
     }
 }
 

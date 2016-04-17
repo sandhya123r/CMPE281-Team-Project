@@ -1,5 +1,6 @@
 package customer.dao.impl;
 
+import com.google.gson.Gson;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +21,7 @@ public class JdbcCustomerDAO implements CustomerDAO
 	
 	public void insert(Customer customer){
 		
-		String sql = "INSERT INTO CUSTOMER " +
+		String sql = "INSERT INTO customer" +
 				"(email, details) VALUES ( ?, ?)";
 		Connection conn = null;
 		
@@ -45,25 +46,23 @@ public class JdbcCustomerDAO implements CustomerDAO
 			}
 		}
 	}
-/*	
-	public Customer findByCustomerId(int custId){
+
+	public Customer findByCustomerEmail(String email){
 		
-		String sql = "SELECT * FROM CUSTOMER WHERE CUST_ID = ?";
+		String sql = "SELECT * FROM customer WHERE email = ?";
 		
 		Connection conn = null;
 		
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, custId);
+			ps.setString(1, email);
 			Customer customer = null;
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				customer = new Customer(
-						rs.getInt("CUST_ID"),
-						rs.getString("NAME"), 
-						rs.getInt("Age")
-				);
+                String details = rs.getString("details");
+                Gson gson = new Gson();
+                customer = gson.fromJson(details, Customer.class);
 			}
 			rs.close();
 			ps.close();
@@ -78,7 +77,7 @@ public class JdbcCustomerDAO implements CustomerDAO
 			}
 		}
 	}
-*/
+
 }
 
 
