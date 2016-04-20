@@ -1,4 +1,6 @@
 // app/routes.js
+var redis = require("redis"),
+    client = redis.createClient();
 module.exports = function(app, passport) {
 
     // =====================================
@@ -41,11 +43,32 @@ module.exports = function(app, passport) {
         res.render('success.ejs');
     });
 
+    app.post('/caching', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('cache.ejs');
+
+        client.on('connect', function() {
+        console.log('connected');
+        });
+
+        var user_name = req.body.email;
+        var password = req.body.password;
+
+        client.set('user_name', user_name);
+        client.set('password', password);
+
+        res.status('200').jsonp({ success: 'Stored User data' })
+        res.redirect('/success');
+        
+    });
+
     // process the signup form
     
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/success', // redirect to the secure profile section
-        failureRedirect : '/success', // redirect back to the signup page if there is an error
+
+        successRedirect : '/caching', // redirect to the secure profile section
+        failureRedirect : '/caching', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
 
