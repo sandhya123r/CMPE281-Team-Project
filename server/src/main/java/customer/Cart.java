@@ -25,6 +25,10 @@ public class Cart {
         this.items = new HashMap <String, Integer>();	
     }
 
+    public void setItems(Map<String,Integer> items) {
+    	this.items = items;
+    }
+
     public void setCartId() {
         this.cartId = String.valueOf(UUID.randomUUID());
     }
