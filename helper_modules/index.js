@@ -23,7 +23,7 @@ var fullString = '';
 
 var pool	=	mysql.createPool({
     connectionLimit : 100,
-    //host     : 'http://ec2-50-16-165-69.compute-1.amazonaws.com',
+    //host     : 'http://someurl',
     host     : 'localhost',
     user     : 'root',
     password : 'root',
@@ -72,7 +72,7 @@ app.use(session({
 app.use(cookieParser("secretSign#143_!223"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-var endpoint = "http://ec2-50-16-165-69.compute-1.amazonaws.com:8080/customers/";
+var endpoint = "http://someurl:8080/customers/";
 
 
 
@@ -190,7 +190,7 @@ router.post('/login',function(req,res){
 });
 
 /*
-var url = 'ec2-50-16-165-69.compute-1.amazonaws.com:8080/customers/sandhya@gmail.com'
+var url = 'someurl:8080/customers/sandhya@gmail.com'
 var request = require("request")
 
 request(url, function(error, response, body) {
