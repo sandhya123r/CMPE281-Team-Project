@@ -1,5 +1,5 @@
 // app/routes.js
-var redis = require("redis"),
+    var redis = require("redis"),
     client = redis.createClient();
 module.exports = function(app, passport) {
 
@@ -54,11 +54,17 @@ module.exports = function(app, passport) {
 
         var user_name = '' + req.body.email;
         var password = '' + req.body.password;
+        var sessionid = require('uuid').v1();
 
-        client.set('user_name', user_name, function(err, reply) {
-        console.log(reply);
-        });
-        client.set('password', password);
+        //storing values as hashmap 
+        client.hmset(sessionid, 'user_name', user_name, 'password', password);
+
+
+
+        // client.set('user_name', user_name, function(err, reply) {
+        // console.log(reply);
+        // });
+        // client.set('password', password);
 
         res.status('200').jsonp({ success: 'Stored User data' })
         res.render('success.ejs');
