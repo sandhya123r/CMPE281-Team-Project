@@ -1,0 +1,22 @@
+{
+  "name": "login_app",
+  "version": "1.0.0",
+  "description": "shopping cart app for chocolates.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies" : {
+    "express" : "~4.0.0",  
+    "body-parser" : "latest",
+    "redis" : "latest",         
+    "express-session" : "latest",          
+    "connect-redis" : "latest",         
+    "cookie-parser" : "latest",    
+    "path" : "latest", 
+    "async" : "latest",  
+    "mysql" : "latest"},
+  "license": "ISC"
+
+}
