@@ -1,21 +1,44 @@
-var sentinel = require('redis-sentinel');
-var endpoints = [
-    {host: '127.0.0.1', port: 26379},
-    {host: '127.0.0.1', port: 26380},
-    {host: '127.0.0.1', port: 26381}
-];
-var opts = {}; // Standard node_redis client options
-var masterName = 'mymaster';
-var redisClient = sentinel.createClient(endpoints, masterName, opts);
+var http = require('http');
+var sockjs = require('sockjs');
+var redis = require('redis');
 
+// Setup Redis pub/sub.
+// NOTE: You must create two Redis clients, as 
+// the one that subscribes can't also publish.
+var pub = redis.createClient();
+var sub = redis.createClient();
+sub.subscribe('global');
 
-//Connecting to master
-var masterClient = sentinel.createClient(endpoints, masterName, {role: 'master'}); 
+// Listen for messages being published to this server.
+sub.on('message', function(channel, msg) {
+  // Broadcast the message to all connected clients on this server.
+  for (var i=0; i<clients.length; i++) {
+    clients[i].write(msg);
+  }
+});
 
-//Connecting to slaves
-var slaveClient = sentinel.createClient(endpoints, masterName, {role: 'slave'});
+// Setup our SockJS server.
+var clients = [];
+var echo = sockjs.createServer();
+echo.on('connection', function(conn) {
+  // Add this client to the client list.
+  clients.push(conn);
 
-//Connecting to sentinel
-var sentinelClient = sentinel.createClient(endpoints, {role: 'sentinel'});
+  // Listen for data coming from clients.
+  conn.on('data', function(message) {
+    // Publish this message to the Redis pub/sub.
+    pub.publish('global', message);
+  });
+
+  // Remove the client from the list.
+  conn.on('close', function() {
+    clients.splice(clients.indexOf(conn), 1);
+  });
+});
+
+// Begin listening.
+var server = http.createServer();
+echo.installHandlers(server, {prefix: '/sockjs'});
+server.listen(80);
 
 
