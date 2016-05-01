@@ -79,7 +79,6 @@ public class CustomerController {
         Customer customer = readFromDb(email);
         Cart cart  = customer.getCart();
         Gson gson = new Gson();
-        System.out.println("GET on Cart returning " + gson.toJson(cart));
         return gson.toJson(cart); 
     }
 
@@ -103,36 +102,12 @@ public class CustomerController {
     public String sample_put(@RequestBody String record,
                              @PathVariable String email,
                              HttpServletRequest request) {
-
-        System.out.println("Put request received for : "  + email + " record : " + record);
-        Customer customer = readFromDb(email);
-        Cart cart = customer.getCart();
-        Gson gson = new Gson();
-        Cart c = gson.fromJson(record, Cart.class);
-        System.out.println(gson.toJson(c));
-        System.out.println(c.getCart_to_display());
-        System.out.println(c.getItems());
-        cart.setItems(c.getItems());
-        cart.setCart_to_display(c.getCart_to_display());
-        customer.setCart(cart);
-        updateDb(customer);
-        System.out.println("Cart is now " + gson.toJson(cart));
-        return gson.toJson(cart);
-    }
-
-
-    @RequestMapping(value = "/{email}/cart1",
-                    method = RequestMethod.PUT,
-                    headers = {"Content-type=application/json"})
-    public String sample_put1(@RequestBody String record,
-                             @PathVariable String email,
-                             HttpServletRequest request) {
-
         System.out.println("Put request received for : "  + email + " record : " + record);
         Customer customer = readFromDb(email);
         Cart cart = customer.getCart();
         Gson gson = new Gson();
         HashMap<String, Integer> deltas = gson.fromJson(record, new TypeToken<HashMap<String, Integer>>(){}.getType());
+
         // First, iterate through the deltas, and update the cart with the new values
         // Then iterate through the cart and collect all the keys where value is less than 0
         // Then remove those keys form the cart.
@@ -147,11 +122,11 @@ public class CustomerController {
             Integer value = entry.getValue();
             System.out.println("Key: " + key + " Value: "  + String.valueOf(value));
             if(cart.getItems().containsKey(key)) {
-                System.out.println("Incrementing value ");
+		System.out.println("Incrementing value ");
                 cart.getItems().put(key, cart.getItems().get(key) + value);
             } else {
                 System.out.println("Inserting for the first time ");
-                cart.getItems().put(key, value);
+		cart.getItems().put(key, value);
             }
         }
  	
@@ -171,7 +146,7 @@ public class CustomerController {
 	cart.setItems(cart.getItems());
 	customer.setCart(cart);
 	System.out.println("new cart is : " + cart.getItems() );
-    updateDb(customer);
+        updateDb(customer);
 	return gson.toJson(cart);
     }
 
