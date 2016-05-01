@@ -1,22 +1,30 @@
-var express        =         require('express');
-var bodyParser     =         require('body-parser');
-var app            =         express();
-var redis           =	  require('redis');
-//var mysql           =	  require("mysql");
+var express        =      require("express");
+var bodyParser     =      require("body-parser");
+var app            =      express();
+var redis           =	  require("redis");
+var mysql           =	  require("mysql");
 var session         =	  require('express-session');
 var redisStore      =	  require('connect-redis')(session);
 var cookieParser    =	  require('cookie-parser');
-var path            =	  require('path');
-var async           =	  require('async');
+var path            =	  require("path");
+var async           =	  require("async");
 var client          =   redis.createClient();
 var router          =	  express.Router();
-var mysql = require('mysql');
+var Client 	    =   require('node-rest-client').Client;
+var http            =   require('http');
+var fullString = '';
+var mysql 	= require('mysql');
+var MongoClient = require('mongodb').MongoClient;
+var assert 	= require('assert');
+var ObjectId 	= require('mongodb').ObjectID;
+var url 	= 'mongodb://localhost:27017/rest_test';
 
 
 
 //app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(bodyParser.json());
-//app.engine('html',require('html').renderFile);
+app.engine('html',require('ejs').renderFile);
+app.set('views',path.join(__dirname ));
 app.use(express.static(__dirname + '/public'));
 
 
@@ -38,6 +46,7 @@ app.use(session({
 app.use(cookieParser("secretSign#143_!223"));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+var endpoint = "<url>"
 
 function handle_database(req,type,callback) {
 	async.waterfall([
@@ -112,8 +121,6 @@ app.get('/',function(req,res){
 	res.sendfile("index.html");
 });
 
-
-
 app.post('/login.html',function(req,res){
 	console.log("coming into post");
 	handle_database(req,"login",function(response){
@@ -125,18 +132,75 @@ app.post('/login.html',function(req,res){
 				//res.json({"error" : "true","message" : "Login failed ! Please register"});
 				res.redirect("/404.html");
 			} else {
-				req.session.key = response;
-				res.redirect("/shop.html");
-				//res.json({"error" : false,"message" : "Login success."});
+				
+				console.log("Appending URL");
+                                var email =req.body.email
+                                var  url = endpoint+email
+                                var newString = '';
+
+                                cart_callback = function(response) {
+                                        response.on('data', function(data) {
+                                                fullString += data.toString();
+                                        })
+                                        response.on('end', function() {
+                                                console.log("FULLSTRING : ",fullString);
+                                                newString = JSON.parse(fullString);
+                                                req.session.key = newString;
+						res.redirect("/shop.html");
+                                                console.log("SESSION KEY is set to : ",req.session.key)
+                                                //res.json({"error" : false,"message" : "Login success."});
+                                        })
+                                }
+                                var x = http.get(url, cart_callback).end();
+				
+
 			}
+		
 		}
 	});
 });
 
 
 app.get('/shop.html',function(req,res){
-	res.sendfile("shop.html",{email : req.session.key["user_name"]});
-	//res.sendfile("shop.html");
+    res.render("shop.html",{email : req.session.key["name"]});
+    console.log("email :", req.session.key["name"]);
+});
+
+app.post('/shop.html',function(req,res){
+    app.set('data',req.body.varname);
+    res.redirect("/product-details.html");
+});	
+
+app.get('/product-details.html',function(req,res){
+	console.log("chocolate name is ",app.get('data'));
+    var image_location = '' ;
+    var view1_location = '';
+    var view2_location = '' ;
+    var view3_location = ''
+    MongoClient.connect(url,function(err,db){ 
+        if(err){
+            console.log("Unable to connect to the mongoDb server",err);
+        } else {
+                console.log("Connection established to db \n");
+                var collection = db.collection('products');
+                collection.find({name :app.get('data')}).stream()
+                .on('data',function(doc){
+                    console.log("here");
+                    image_location = doc.location;
+                    view1_location = doc.view1;
+                    view2_location = doc.view2;
+                    view3_location = doc.view3;
+                })
+                .on('error',function(err){
+                    console.log("error");
+                })  
+                .on('end', function(){
+                console.log("views : ",view1_location,view2_location,view3_location);
+                res.render("product-details.ejs",{image:image_location,view1:view1_location});
+                });
+                           
+              }
+         });
 });
 
 app.get('/checkout.html',function(req,res){
@@ -159,26 +223,26 @@ app.get('/cart.html',function(req,res){
 	res.sendfile("cart.html");
 });
 
-/*function handle_database(req,type){
 
-	console.log("i have beeen called");
-}
-
-app.post('/login1.html', function(req,res){
-	console.log(req.body.email);
-	handle_database(req,"login",{
-		
-	});
-	res.json({"email":req.body.email,"password":req.body.password});
-	console.log("json format :"+ req.body.email);
-	res.sendfile("dummy.html");
-});*/
 
 app.get('/dummy.html',function(req,res){
 	res.writeHead(404,{"Content-Type":"application/json"});
 });
 
+app.get('/404.html',function(req,res){
+	res.sendfile("404.html");
+});
 
+
+app.get('/logout',function(req,res){
+	if(req.session.key) {
+    	req.session.destroy(function(){
+      	res.redirect('/');
+    });
+	} else {
+		res.redirect('/');
+	}
+});
 
 app.listen(8080,function(){
   console.log("Started on PORT 8080");
