@@ -42,14 +42,20 @@ public class CustomerController {
         Customer u2 = new Customer(
             "tom@gmail", "Tom Tom", "tom address",
             "tom phone", "tom cc");
+        Customer u3 = new Customer(
+            "cmpe281@gmail","cmpe281","San Jose State University,San Jose",
+            "4086127689","4322-0022-2422-2242");
+        
         this.allCustomers.put(u1.getEmail(), u1);
         this.allCustomers.put(u2.getEmail(), u2);
+        this.allCustomers.put(u3.getEmail(),u3);
         System.out.println(this.allCustomers);
 
         context = new ClassPathXmlApplicationContext("Spring-Module.xml");
         customerDAO = (CustomerDAO) context.getBean("customerDAO");
         customerDAO.insert(u1);
         customerDAO.insert(u2);
+        customerDAO.insert(u3);
     } 
 
     //Get customer details using the email address 
